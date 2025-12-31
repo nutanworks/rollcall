@@ -1,0 +1,472 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="description" content="RollCall - Smart attendance and campus management made simple.">
+    
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="RollCall | Smart Campus">
+    <meta property="og:description" content="Secure, QR-based attendance tracking and classroom management.">
+    
+    <title>RollCall | Smart Campus</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📋</text></svg>">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS & Config -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Outfit', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace'],
+            },
+            animation: {
+              'blob': 'blob 7s infinite',
+              'fade-in': 'fadeIn 0.5s ease-out',
+              'fade-in-up': 'fadeInUp 0.8s ease-out',
+              'bounce-slight': 'bounceSlight 2s infinite',
+              'spin-slow': 'spin 3s linear infinite',
+              'float': 'float 6s ease-in-out infinite',
+              'border-flow': 'borderFlow 3s ease infinite',
+              'ghost-float': 'ghostFloat 8s ease-in-out infinite',
+              'glitch': 'glitch 1s linear infinite',
+            },
+            keyframes: {
+              blob: {
+                '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                '100%': { transform: 'translate(0px, 0px) scale(1)' },
+              },
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              fadeInUp: {
+                '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              bounceSlight: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-5px)' },
+              },
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-20px)' },
+              },
+              borderFlow: {
+                '0%, 100%': { backgroundPosition: '0% 50%' },
+                '50%': { backgroundPosition: '100% 50%' },
+              },
+              ghostFloat: {
+                '0%, 100%': { transform: 'translateY(0) translateX(0)', opacity: '0.6' },
+                '50%': { transform: 'translateY(-20px) translateX(10px)', opacity: '0.8' },
+              },
+              glitch: {
+                '2%, 64%': { transform: 'translate(2px,0) skew(0deg)' },
+                '4%, 60%': { transform: 'translate(-2px,0) skew(0deg)' },
+                '62%': { transform: 'translate(0,0) skew(5deg)' },
+              }
+            },
+            colors: {
+              indigo: {
+                50: '#eef2ff',
+                100: '#e0e7ff',
+                200: '#c7d2fe',
+                300: '#a5b4fc',
+                400: '#818cf8',
+                500: '#6366f1',
+                600: '#4f46e5',
+                700: '#4338ca',
+                800: '#3730a3',
+                900: '#312e81',
+              }
+            }
+          }
+        }
+      }
+    </script>
+
+    <!-- Global Styles -->
+    <style>
+      :root {
+        --primary-color: #4f46e5;
+        --secondary-color: #818cf8;
+        --bg-color: #f8fafc;
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-color);
+        -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
+        margin: 0;
+        overflow-x: hidden;
+      }
+
+      /* Red Ghost / Hacker Theme Overrides */
+      .red-ghost {
+        --bg-color: #050101;
+        --primary-color: #ff0000;
+      }
+      
+      .red-ghost body {
+        background-color: #050101 !important;
+        font-family: 'JetBrains Mono', 'Courier New', monospace !important;
+      }
+
+      .red-ghost .dark\:bg-gray-900,
+      .red-ghost .dark\:bg-gray-950,
+      .red-ghost .dark\:bg-gray-800,
+      .red-ghost .dark\:bg-gray-700,
+      .red-ghost .bg-white,
+      .red-ghost .dark\:bg-white {
+        background-color: #0a0202 !important;
+        border-color: #330505 !important;
+      }
+
+      /* Text Colors & Glow */
+      .red-ghost .dark\:text-white,
+      .red-ghost .text-gray-900,
+      .red-ghost h1, 
+      .red-ghost h2, 
+      .red-ghost h3, 
+      .red-ghost h4 {
+        color: #ff0000 !important; /* Pure Red */
+        text-shadow: 0 0 8px rgba(255, 0, 0, 0.6);
+        font-family: 'JetBrains Mono', monospace !important;
+        letter-spacing: -0.05em;
+      }
+
+      .red-ghost .dark\:text-gray-400,
+      .red-ghost .text-gray-500,
+      .red-ghost .text-gray-600 {
+        color: #b91c1c !important; /* Darker Red */
+        text-shadow: none;
+      }
+
+      /* Borders */
+      .red-ghost .dark\:border-gray-700,
+      .red-ghost .dark\:border-gray-600,
+      .red-ghost .border-gray-200,
+      .red-ghost .border-gray-100 {
+        border-color: #450a0a !important;
+        border-style: solid;
+      }
+
+      /* Buttons & Accents */
+      .red-ghost .text-indigo-600,
+      .red-ghost .dark\:text-indigo-400,
+      .red-ghost .text-indigo-700 {
+        color: #ff0000 !important;
+      }
+
+      .red-ghost .bg-indigo-600,
+      .red-ghost .bg-indigo-50,
+      .red-ghost .dark\:bg-indigo-900\/30,
+      .red-ghost .dark\:bg-indigo-900\/20 {
+        background-color: #2b0505 !important;
+        color: #ff0000 !important;
+        border: 1px solid #ff0000 !important;
+        box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+      }
+      
+      .red-ghost .bg-indigo-600:hover {
+        background-color: #ff0000 !important;
+        color: #000000 !important;
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.8) !important;
+      }
+
+      /* Inputs */
+      .red-ghost input, 
+      .red-ghost select, 
+      .red-ghost textarea {
+        background-color: #050101 !important;
+        border: 1px solid #7f1d1d !important;
+        color: #ff0000 !important;
+        font-family: 'JetBrains Mono', monospace !important;
+      }
+      
+      .red-ghost input:focus,
+      .red-ghost select:focus {
+        box-shadow: 0 0 15px rgba(220, 38, 38, 0.4) !important;
+        border-color: #ff0000 !important;
+      }
+
+      .red-ghost ::selection {
+        background: #ff0000;
+        color: #000000;
+      }
+      
+      /* Scrollbar */
+      .red-ghost ::-webkit-scrollbar-thumb {
+        background: #7f1d1d;
+        border-radius: 0;
+      }
+      .red-ghost ::-webkit-scrollbar-thumb:hover {
+        background: #ff0000;
+      }
+
+      /* Animated Gradient Background Class */
+      .mesh-gradient {
+        background-color: #ffffff;
+        background-image: 
+          radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+          radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+          radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+      }
+      
+      /* Animated Gradient Border with Glow - Thin & Hover Effect */
+      .animated-border {
+        position: relative;
+        /* Default visible border handled via box-shadow or parent classes */
+        border-radius: 1.5rem;
+        z-index: 0;
+        transition: transform 0.3s ease;
+      }
+      
+      .animated-border::before {
+        content: "";
+        position: absolute;
+        inset: -1.5px; /* Thin glow extension */
+        z-index: -1;
+        background: linear-gradient(60deg, #6366f1, #d946ef, #f43f5e, #eab308, #22c55e, #06b6d4, #6366f1);
+        background-size: 300% 300%;
+        border-radius: inherit;
+        opacity: 0; /* Hidden by default */
+        transition: opacity 0.3s ease, background-position 0s;
+      }
+      
+      /* Glow Layer */
+      .animated-border::after {
+        content: "";
+        position: absolute;
+        inset: -1.5px;
+        z-index: -2;
+        background: linear-gradient(60deg, #6366f1, #d946ef, #f43f5e, #eab308, #22c55e, #06b6d4, #6366f1);
+        background-size: 300% 300%;
+        border-radius: inherit;
+        filter: blur(8px);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      /* Hover States */
+      .animated-border:hover::before {
+        opacity: 1;
+        animation: borderFlow 3s ease infinite;
+      }
+      .animated-border:hover::after {
+        opacity: 0.6;
+        animation: borderFlow 3s ease infinite;
+      }
+      
+      /* Red Ghost Specific Animated Border */
+      .red-ghost .animated-border::before,
+      .red-ghost .animated-border::after {
+        background: #ff0000 !important;
+        box-shadow: 0 0 15px #ff0000;
+      }
+      .red-ghost .animated-border {
+        border: 1px solid #7f1d1d;
+        border-radius: 0.5rem !important; /* Sharper corners for hacker feel */
+      }
+      .red-ghost .animated-border > * {
+         border-radius: 0.5rem !important;
+      }
+      
+      /* Animated Gradient Border for Inputs */
+      @keyframes gradient-border {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+
+      .input-animated-border {
+        position: relative;
+        border-radius: 0.75rem; /* rounded-xl */
+        z-index: 0;
+      }
+      
+      .input-animated-border::after {
+        content: "";
+        position: absolute;
+        inset: -1px; /* Very thin border (1px) */
+        z-index: -1;
+        /* Yellow (#facc15 - yellow-400) and Green (#22c55e - green-500) gradient */
+        background: linear-gradient(60deg, #facc15, #22c55e, #facc15, #22c55e);
+        background-size: 300% 300%;
+        border-radius: 0.8rem; 
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      
+      .red-ghost .input-animated-border::after {
+        background: #ff0000 !important;
+      }
+
+      .input-animated-border:focus-within::after {
+        opacity: 1;
+        animation: gradient-border 2s linear infinite;
+      }
+
+      /* Vibrant Glow */
+      .vibrant-glow:hover {
+        box-shadow: 0 0 25px rgba(99, 102, 241, 0.6);
+        transition: box-shadow 0.3s ease;
+      }
+      .red-ghost .vibrant-glow:hover {
+        box-shadow: 0 0 25px rgba(255, 0, 0, 0.8) !important;
+      }
+
+      /* Heading Font */
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Outfit', sans-serif;
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+      }
+
+      /* Enhanced Loader */
+      .app-loader {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #f8fafc;
+        z-index: 9999;
+      }
+
+      .loader-container {
+        position: relative;
+        width: 80px;
+        height: 80px;
+      }
+
+      .loader-ring {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 4px solid transparent;
+        border-top-color: var(--primary-color);
+        animation: spin 1s cubic-bezier(0.55, 0.055, 0.675, 0.19) infinite;
+      }
+
+      .loader-ring:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 50%;
+        border: 4px solid transparent;
+        border-right-color: var(--secondary-color);
+        animation: spin 2s cubic-bezier(0.55, 0.055, 0.675, 0.19) infinite reverse;
+      }
+
+      .loader-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 24px;
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+
+      .loader-text {
+        margin-top: 24px;
+        font-family: 'Outfit', sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        letter-spacing: 0.2em;
+        color: #1e293b;
+        text-transform: uppercase;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease-out forwards 0.2s;
+      }
+      
+      .loader-subtext {
+        margin-top: 8px;
+        font-size: 12px;
+        color: #64748b;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease-out forwards 0.4s;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      @keyframes pulse {
+        0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        50% { transform: translate(-50%, -50%) scale(0.85); opacity: 0.7; }
+      }
+
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "jsqr": "https://aistudiocdn.com/jsqr@^1.4.0",
+    "react-qr-code": "https://aistudiocdn.com/react-qr-code@^2.0.18",
+    "jspdf": "https://aistudiocdn.com/jspdf@^2.5.1",
+    "jspdf-autotable": "https://aistudiocdn.com/jspdf-autotable@^3.8.2"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root">
+      <!-- Enhanced Startup Loader -->
+      <div class="app-loader">
+        <div class="loader-container">
+          <div class="loader-ring"></div>
+          <div class="loader-icon">📋</div>
+        </div>
+        <div class="loader-text">RollCall</div>
+        <div class="loader-subtext">Initializing Campus...</div>
+      </div>
+    </div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>

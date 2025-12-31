@@ -1,0 +1,7 @@
+{
+  "name": "RollCall",
+  "description": "Simple, smart attendance and campus management.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
