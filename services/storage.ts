@@ -2,7 +2,7 @@
 import { User, AttendanceRecord, UserRole, SystemSettings, Notice, JoinRequest, QuestionPaper } from '../types';
 import { INITIAL_ADMIN, ADMIN_EMAIL, ADMIN_PASS } from '../constants';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = '/api';
 
 // --- MOCK STORAGE IMPLEMENTATION (Fallback) ---
 // This allows the app to work even if the backend server is not running
@@ -77,7 +77,7 @@ const mockDelay = () => new Promise(resolve => setTimeout(resolve, 600));
 const mockApi = {
     login: async (email: string, password: string, role: UserRole) => {
         await mockDelay();
-        
+
         const normalizedEmail = email.toLowerCase().trim();
         const adminEmail = ADMIN_EMAIL.toLowerCase();
 
@@ -85,39 +85,39 @@ const mockApi = {
         if (role === UserRole.ADMIN && normalizedEmail === adminEmail && password === ADMIN_PASS) {
             return INITIAL_ADMIN;
         }
-        
+
         // 2. Check Local Storage Users
         const users = getLocalUsers();
         // Check case-insensitive email matching
         const user = users.find(u => u.email.toLowerCase().trim() === normalizedEmail && u.role === role);
-        
+
         if (user && (user.password === password || !user.password)) {
             return user;
         }
         throw new Error('Invalid credentials (Offline Mode)');
     },
-    
+
     resetPassword: async (email: string) => {
         await mockDelay();
         // Check Admin
         if (email === ADMIN_EMAIL) {
-             return { message: 'Reset link sent' };
+            return { message: 'Reset link sent' };
         }
-        
+
         const users = getLocalUsers();
         const user = users.find(u => u.email === email);
         if (!user) {
-             throw new Error('No account found with this email address.');
+            throw new Error('No account found with this email address.');
         }
         return { message: 'Reset link sent' };
     },
-    
+
     getUsers: async (role?: UserRole) => {
         await mockDelay();
         const users = getLocalUsers();
         return role ? users.filter(u => u.role === role) : users;
     },
-    
+
     saveUser: async (user: User & { password?: string }) => {
         await mockDelay();
         const users = getLocalUsers();
@@ -136,10 +136,10 @@ const mockApi = {
         if (index === -1) {
             throw new Error('User not found');
         }
-        
+
         // Check for email collision if email changed
         if (users[index].email !== user.email && users.find(u => u.email === user.email)) {
-             throw new Error('User with this email already exists');
+            throw new Error('User with this email already exists');
         }
 
         users[index] = { ...users[index], ...user };
@@ -152,9 +152,9 @@ const mockApi = {
         let users = getLocalUsers();
         const initialLength = users.length;
         users = users.filter(u => u.id !== userId);
-        
+
         if (users.length === initialLength) {
-             throw new Error('User not found');
+            throw new Error('User not found');
         }
         localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(users));
         return { message: 'Deleted' };
@@ -164,7 +164,7 @@ const mockApi = {
         await mockDelay();
         const users = getLocalUsers();
         let updatedCount = 0;
-        
+
         // Update local storage
         const updatedUsers = users.map(u => {
             if (studentIds.includes(u.id) && u.role === UserRole.STUDENT) {
@@ -182,11 +182,11 @@ const mockApi = {
         // Return only the updated students
         return updatedUsers.filter(u => studentIds.includes(u.id));
     },
-    
+
     getAttendance: async (params: any) => {
         await mockDelay();
         let records = getLocalAttendance();
-        
+
         const { studentId, startDate, endDate, subject } = params;
 
         if (studentId) {
@@ -204,22 +204,22 @@ const mockApi = {
 
         return records.sort((a, b) => b.timestamp - a.timestamp);
     },
-    
+
     markAttendance: async (record: AttendanceRecord) => {
         await mockDelay();
         const records = getLocalAttendance();
-        
+
         // Check duplicate
-        const exists = records.find(r => 
-            r.studentId === record.studentId && 
-            r.subject === record.subject && 
+        const exists = records.find(r =>
+            r.studentId === record.studentId &&
+            r.subject === record.subject &&
             r.date === record.date
         );
-        
+
         if (exists) {
             throw new Error('Attendance already marked for this subject today (Offline Mode).');
         }
-        
+
         records.push(record);
         localStorage.setItem(STORAGE_KEY_ATTENDANCE, JSON.stringify(records));
         return record;
@@ -241,8 +241,8 @@ const mockApi = {
                 return [];
             }
         }
-        
-        return notices.sort((a,b) => b.timestamp - a.timestamp);
+
+        return notices.sort((a, b) => b.timestamp - a.timestamp);
     },
 
     createNotice: async (notice: Notice) => {
@@ -334,7 +334,7 @@ const mockApi = {
         await mockDelay();
         const requests = getLocalRequests();
         const users = getLocalUsers();
-        
+
         // Verify teacher exists
         const teacher = users.find(u => u.id === request.teacherId && u.role === UserRole.TEACHER);
         if (!teacher) throw new Error('Teacher ID not found.');
@@ -370,7 +370,7 @@ const mockApi = {
         if (status === 'ACCEPTED') {
             const users = getLocalUsers();
             const studentIndex = users.findIndex(u => u.id === requests[reqIndex].studentId);
-            
+
             if (studentIndex !== -1) {
                 const student = users[studentIndex];
                 const currentTeachers = student.teacherIds || [];
@@ -381,7 +381,7 @@ const mockApi = {
                 }
             }
         }
-        
+
         // Remove processed request or keep history? Let's keep history but API filters PENDING
         // Actually for simplicity in mock, let's remove it if rejected, keep if accepted? 
         // Standard pattern: update status.
@@ -402,7 +402,7 @@ const handleMockRoute = async (method: string, endpoint: string, data?: any) => 
     if (path === '/login' && method === 'POST') {
         return mockApi.login(data.email, data.password, data.role);
     }
-    
+
     if (path === '/forgot-password' && method === 'POST') {
         return mockApi.resetPassword(data.email);
     }
@@ -419,7 +419,7 @@ const handleMockRoute = async (method: string, endpoint: string, data?: any) => 
     if (path.startsWith('/users/') && method === 'PUT') {
         const id = path.split('/').pop();
         if (id) {
-             return mockApi.updateUser({ ...data, id });
+            return mockApi.updateUser({ ...data, id });
         }
     }
 
@@ -429,7 +429,7 @@ const handleMockRoute = async (method: string, endpoint: string, data?: any) => 
             return mockApi.deleteUser(id);
         }
     }
-    
+
     if (path === '/attendance') {
         if (method === 'GET') return mockApi.getAttendance(params);
         if (method === 'POST') return mockApi.markAttendance(data);
@@ -470,7 +470,7 @@ const handleMockRoute = async (method: string, endpoint: string, data?: any) => 
         if (method === 'GET') return mockApi.getJoinRequests(params.teacherId);
         if (method === 'POST') return mockApi.createJoinRequest(data);
     }
-    
+
     if (path.startsWith('/requests/respond') && method === 'POST') {
         return mockApi.respondJoinRequest(data.requestId, data.status);
     }
@@ -480,117 +480,117 @@ const handleMockRoute = async (method: string, endpoint: string, data?: any) => 
 
 // Helper for HTTP requests with Fallback
 const api = {
-  get: async (endpoint: string) => {
-    try {
-        const res = await fetch(`${API_URL}${endpoint}`);
-        if (!res.ok) throw new Error(await res.text());
-        return res.json();
-    } catch (err: any) {
-        // Fallback if backend is down
-        if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError') || err.name === 'TypeError') {
-            console.warn('Backend unavailable. Switching to localStorage fallback.');
-            return handleMockRoute('GET', endpoint);
+    get: async (endpoint: string) => {
+        try {
+            const res = await fetch(`${API_URL}${endpoint}`);
+            if (!res.ok) throw new Error(await res.text());
+            return res.json();
+        } catch (err: any) {
+            // Fallback if backend is down
+            if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError') || err.name === 'TypeError') {
+                console.warn('Backend unavailable. Switching to localStorage fallback.');
+                return handleMockRoute('GET', endpoint);
+            }
+            throw err;
         }
-        throw err;
+    },
+    post: async (endpoint: string, data: any) => {
+        try {
+            const res = await fetch(`${API_URL}${endpoint}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+            if (!res.ok) {
+                const err = await res.json();
+                throw new Error(err.message || 'API Error');
+            }
+            return res.json();
+        } catch (err: any) {
+            // Fallback if backend is down
+            if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError') || err.name === 'TypeError') {
+                console.warn('Backend unavailable. Switching to localStorage fallback.');
+                return handleMockRoute('POST', endpoint, data);
+            }
+            throw err;
+        }
+    },
+    put: async (endpoint: string, data: any) => {
+        try {
+            const res = await fetch(`${API_URL}${endpoint}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+            if (!res.ok) {
+                const err = await res.json();
+                throw new Error(err.message || 'API Error');
+            }
+            return res.json();
+        } catch (err: any) {
+            // Fallback if backend is down
+            if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError') || err.name === 'TypeError') {
+                console.warn('Backend unavailable. Switching to localStorage fallback.');
+                return handleMockRoute('PUT', endpoint, data);
+            }
+            throw err;
+        }
+    },
+    delete: async (endpoint: string) => {
+        try {
+            const res = await fetch(`${API_URL}${endpoint}`, {
+                method: 'DELETE',
+            });
+            if (!res.ok) {
+                const err = await res.json();
+                throw new Error(err.message || 'API Error');
+            }
+            return res.json();
+        } catch (err: any) {
+            // Fallback if backend is down
+            if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError') || err.name === 'TypeError') {
+                console.warn('Backend unavailable. Switching to localStorage fallback.');
+                return handleMockRoute('DELETE', endpoint);
+            }
+            throw err;
+        }
     }
-  },
-  post: async (endpoint: string, data: any) => {
-    try {
-        const res = await fetch(`${API_URL}${endpoint}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-        });
-        if (!res.ok) {
-           const err = await res.json();
-           throw new Error(err.message || 'API Error');
-        }
-        return res.json();
-    } catch (err: any) {
-        // Fallback if backend is down
-        if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError') || err.name === 'TypeError') {
-            console.warn('Backend unavailable. Switching to localStorage fallback.');
-            return handleMockRoute('POST', endpoint, data);
-        }
-        throw err;
-    }
-  },
-  put: async (endpoint: string, data: any) => {
-    try {
-        const res = await fetch(`${API_URL}${endpoint}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-        });
-        if (!res.ok) {
-           const err = await res.json();
-           throw new Error(err.message || 'API Error');
-        }
-        return res.json();
-    } catch (err: any) {
-        // Fallback if backend is down
-        if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError') || err.name === 'TypeError') {
-            console.warn('Backend unavailable. Switching to localStorage fallback.');
-            return handleMockRoute('PUT', endpoint, data);
-        }
-        throw err;
-    }
-  },
-  delete: async (endpoint: string) => {
-    try {
-        const res = await fetch(`${API_URL}${endpoint}`, {
-            method: 'DELETE',
-        });
-        if (!res.ok) {
-           const err = await res.json();
-           throw new Error(err.message || 'API Error');
-        }
-        return res.json();
-    } catch (err: any) {
-        // Fallback if backend is down
-        if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError') || err.name === 'TypeError') {
-            console.warn('Backend unavailable. Switching to localStorage fallback.');
-            return handleMockRoute('DELETE', endpoint);
-        }
-        throw err;
-    }
-  }
 };
 
 export const checkBackendConnection = async (): Promise<boolean> => {
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 2000); // 2s timeout
-    const res = await fetch(`${API_URL}/users?role=ADMIN`, { signal: controller.signal });
-    clearTimeout(timeoutId);
-    return res.ok;
-  } catch (err) {
-    return false;
-  }
+    try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2000); // 2s timeout
+        const res = await fetch(`${API_URL}/users?role=ADMIN`, { signal: controller.signal });
+        clearTimeout(timeoutId);
+        return res.ok;
+    } catch (err) {
+        return false;
+    }
 };
 
 export const loginUser = async (email: string, password: string, role: UserRole): Promise<User> => {
-  return api.post('/login', { email, password, role });
+    return api.post('/login', { email, password, role });
 };
 
-export const resetPassword = async (email: string): Promise<{message: string}> => {
-  return api.post('/forgot-password', { email });
+export const resetPassword = async (email: string): Promise<{ message: string }> => {
+    return api.post('/forgot-password', { email });
 };
 
 export const getUsers = async (): Promise<User[]> => {
-  return api.get('/users');
+    return api.get('/users');
 };
 
 export const getStudents = async (): Promise<User[]> => {
-  return api.get(`/users?role=${UserRole.STUDENT}`);
+    return api.get(`/users?role=${UserRole.STUDENT}`);
 };
 
 export const getTeachers = async (): Promise<User[]> => {
-  return api.get(`/users?role=${UserRole.TEACHER}`);
+    return api.get(`/users?role=${UserRole.TEACHER}`);
 };
 
 export const saveUser = async (user: User & { password?: string }): Promise<User> => {
-  return api.post('/users', user);
+    return api.post('/users', user);
 };
 
 export const updateUser = async (user: User & { password?: string }): Promise<User> => {
@@ -606,11 +606,11 @@ export const bulkAssignTeachers = async (studentIds: string[], teacherIds: strin
 };
 
 export const markAttendance = async (record: AttendanceRecord): Promise<AttendanceRecord> => {
-  return api.post('/attendance', record);
+    return api.post('/attendance', record);
 };
 
 export const getStudentAttendance = async (studentId: string): Promise<AttendanceRecord[]> => {
-  return api.get(`/attendance?studentId=${studentId}`);
+    return api.get(`/attendance?studentId=${studentId}`);
 };
 
 export const getAttendanceReport = async (filters: { startDate?: string, endDate?: string, subject?: string }): Promise<AttendanceRecord[]> => {
@@ -618,7 +618,7 @@ export const getAttendanceReport = async (filters: { startDate?: string, endDate
     if (filters.startDate) params.append('startDate', filters.startDate);
     if (filters.endDate) params.append('endDate', filters.endDate);
     if (filters.subject) params.append('subject', filters.subject);
-    
+
     return api.get(`/attendance?${params.toString()}`);
 };
 
