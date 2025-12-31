@@ -434,8 +434,8 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser 
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id as any)}
                             className={`flex items-center justify-center px-5 py-2.5 text-sm font-bold rounded-full transition-all duration-300 whitespace-nowrap ${activeTab === tab.id
-                                    ? 'bg-indigo-600 text-white shadow-md transform scale-105'
-                                    : 'text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'
+                                ? 'bg-indigo-600 text-white shadow-md transform scale-105'
+                                : 'text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                                 }`}
                         >
                             <tab.icon className="h-4 w-4 mr-2" />
@@ -1064,7 +1064,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ currentUser 
             {/* Notice Modal */}
             {showNoticeModal && (
                 <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
-                    <div className="bg-white dark:bg-gray-800 w-full max-w-lg rounded-3xl shadow-2xl p-8 animated-border relative transform transition-all scale-100">
+                    <div className="bg-white dark:bg-gray-800 w-full max-w-lg rounded-3xl shadow-2xl p-8 relative transform transition-all scale-100">
                         <div className="flex justify-between items-center mb-8">
                             <h3 className="text-xl font-bold text-gray-900 dark:text-white">{editingNoticeId ? 'Edit Notice' : 'Post New Notice'}</h3>
                             <button onClick={closeNoticeModal} className="text-gray-400 hover:text-gray-600 bg-gray-100 dark:bg-gray-700 p-2 rounded-full transition-colors"><CloseIcon className="h-5 w-5" /></button>
