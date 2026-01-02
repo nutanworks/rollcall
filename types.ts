@@ -29,6 +29,8 @@ export interface User {
   cie?: StudentCIE; // Detailed CIE Marks structure
   allowInvite?: boolean; // Admin permission for teachers to invite students
   totalClasses?: number; // Total number of classes conducted by the teacher
+  gender?: string;
+  branch?: string;
 }
 
 export interface JoinRequest {

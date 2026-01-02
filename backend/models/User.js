@@ -17,6 +17,8 @@ const userSchema = new mongoose.Schema({
     assignment: { type: Number, default: 0 },
     assignmentSubmitted: { type: Boolean, default: false }
   },
+  gender: { type: String },
+  branch: { type: String },
   createdAt: { type: Number, default: Date.now }
 });
 
