@@ -27,11 +27,14 @@ const App: React.FC = () => {
     return <Login onLogin={handleLogin} />;
   }
 
+  if (user.role === UserRole.STUDENT) {
+    return <StudentDashboard currentUser={user} onLogout={handleLogout} />;
+  }
+
   return (
     <Layout user={user} onLogout={handleLogout} title={`${user.role.charAt(0) + user.role.slice(1).toLowerCase()} Dashboard`}>
       {user.role === UserRole.ADMIN && <AdminDashboard />}
       {user.role === UserRole.TEACHER && <TeacherDashboard currentUser={user} />}
-      {user.role === UserRole.STUDENT && <StudentDashboard currentUser={user} />}
     </Layout>
   );
 };
